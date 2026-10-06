@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CLINICAL MIND — Науқасты бағала</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      background: #0b1020;
+      color: #f5f7fb;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .app {
+      min-height: 100vh;
+      padding: 30px;
+    }
+
+    .container {
+      width: min(1100px, 100%);
+      margin: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      opacity: .55;
+    }
+
+    .card {
+      background: #151c30;
+      border: 1px solid #27314d;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 15px 50px rgba(0,0,0,.2);
+    }
+
+    .auth {
+      max-width: 440px;
+      margin: 8vh auto;
+    }
+
+    h1 {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: #9ba6bf;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      margin: 8px 0;
+      border-radius: 12px;
+      border: 1px solid #303b5c;
+      background: #0f1526;
+      color: white;
+      outline: none;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 18px;
+      background: #4f7cff;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: .9;
+    }
+
+    button.secondary {
+      background: #252f49;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .error {
+      margin-top: 12px;
+      color: #ff8e8e;
+    }
+
+    .cases {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .case-card {
+      cursor: pointer;
+    }
+
+    .case-card:hover {
+      border-color: #4f7cff;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #222d49;
+      color: #9eb5ff;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .patient {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .vital {
+      background: #0e1425;
+      padding: 15px;
+      border-radius: 14px;
+    }
+
+    .vital strong {
+      display: block;
+      font-size: 22px;
+      margin-top: 5px;
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .exam {
+      padding: 18px;
+      background: #10172a;
+      border: 1px solid #27314d;
+      border-radius: 14px;
+    }
+
+    .result {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #18213a;
+      line-height: 1.5;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .option {
+      text-align: left;
+      background: #11182b;
+      border: 1px solid #303b5c;
+    }
+
+    .score {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .feedback {
+      margin-top: 20px;
+      padding: 18px;
+      background: #10172a;
+      border-radius: 14px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .app {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+  <div class="container">
+
+    <div class="header">
+      <div class="logo">
+        CLINICAL MIND <span>· Науқасты бағала</span>
+      </div>
+
+      <button
+        id="logoutButton"
+        class="secondary hidden"
+      >
+        Шығу
+      </button>
+    </div>
+
+    <section id="authScreen" class="card auth">
+
+      <h1>CLINICAL MIND</h1>
+
+      <p class="muted">
+        Сенің міндетің — диагнозды бірден табу емес.
+        Алдымен пациентті дұрыс бағала.
+      </p>
+
+      <input
+        id="username"
+        type="text"
+        placeholder="Username"
+      >
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Password"
+      >
+
+      <div class="auth-buttons">
+
+        <button id="loginButton">
+          Кіру
+        </button>
+
+        <button
+          id="registerButton"
+          class="secondary"
+        >
+          Регистрация
+        </button>
+
+      </div>
+
+      <div
+        id="authError"
+        class="error"
+      ></div>
+
+    </section>
+
+    <section
+      id="caseScreen"
+      class="hidden"
+    >
+
+      <div class="card">
+        <div class="topbar">
+
+          <div>
+            <h2>Клиникалық кейстер</h2>
+            <p class="muted">
+              Пациентті таңда және клиникалық ойлауды баста.
+            </p>
+          </div>
+
+          <div>
+            <span id="progressText"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <br>
+
+      <div
+        id="casesList"
+        class="cases"
+      ></div>
+
+    </section>
+
+    <section
+      id="gameScreen"
+      class="hidden"
+    >
+
+      <div class="card">
+
+        <div class="topbar">
+
+          <div>
+            <span
+              id="difficulty"
+              class="badge"
+            ></span>
+
+            <h2 id="caseTitle"></h2>
+          </div>
+
+          <div class="score">
+            <span id="score">0</span> балл
+          </div>
+
+        </div>
+
+        <div class="patient">
+
+          <div class="vital">
+            Пациент
+            <strong id="patientName"></strong>
+          </div>
+
+          <div class="vital">
+            Жасы
+            <strong id="patientAge"></strong>
+          </div>
+
+          <div class="vital">
+            Жынысы
+            <strong id="patientGender"></strong>
+          </div>
+
+          <div class="vital">
+            АҚ
+            <strong id="bp"></strong>
+          </div>
+
+          <div class="vital">
+            ЖСЖ
+            <strong id="hr"></strong>
+          </div>
+
+          <div class="vital">
+            SpO₂
+            <strong id="spo2"></strong>
+          </div>
+
+          <div class="vital">
+            Температура
+            <strong id="temperature"></strong>
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <h3>Негізгі шағым</h3>
+
+          <p id="complaint"></p>
+
+        </div>
+
+        <br>
+
+        <h3>Физикалық және инструменталды тексерулер</h3>
+
+        <div
+          id="examinations"
+          class="exam-grid"
+        ></div>
+
+        <br>
+
+        <div class="card">
+
+          <h3>Алдын ала диагноз</h3>
+
+          <p class="muted">
+            Барлық қажетті ақпаратты жинағаннан кейін
+            диагнозды таңда.
+          </p>
+
+          <div
+            id="options"
+            class="options"
+          ></div>
+
+        </div>
+
+        <div
+          id="gameFeedback"
+          class="feedback hidden"
+        ></div>
+
+        <br>
+
+        <button
+          id="backToCases"
+          class="secondary"
+        >
+          ← Кейстерге оралу
+        </button>
+
+      </div>
+
+    </section>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
